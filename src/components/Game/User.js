@@ -1,6 +1,6 @@
 import React from "react";
 import * as firebase from "firebase";
-import style from "./User.module.css";
+import Buzzer from "./Buzzer"
 
 class User extends React.Component {
   constructor(props) {
@@ -64,13 +64,10 @@ class User extends React.Component {
     return (
       <div>
         <h2>{this.state.user.data().name}</h2>
-        <button
-          className={style.buzzer}
-          onClick={() => this.pressBuzzer()}
-          disabled={this.state.buzzed}
-        >
-          Buzzer
-        </button>
+        <Buzzer
+            press={() => this.pressBuzzer()}
+            buzzed={this.state.buzzed}
+        />
       </div>
     );
   }
