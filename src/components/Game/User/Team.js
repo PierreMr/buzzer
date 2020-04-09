@@ -5,7 +5,7 @@ const Team = ({ team, user, joinTeam }) => (
     {team.data().name}
     {user.data().team
       ? user.data().team.name === team.data().name
-        ? " - YahMan"
+        ? " - ThisIsTheOne"
         : ""
       : ""}
   </li>
