@@ -9,11 +9,11 @@ const NewGame = () => {
   const teams = [
     {
       name: "Ketchup",
-      color: "red",
+      color: "#9A382D",
     },
     {
       name: "Mayo",
-      color: "yellow",
+      color: "#FFDF00",
     },
   ];
 
@@ -67,7 +67,6 @@ const NewGame = () => {
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         })
         .then((newTeam) => {
-          console.log(newTeam);
           game.update({
             teams: firebase.firestore.FieldValue.arrayUnion({
               id: newTeam.id,

@@ -11,13 +11,15 @@ class Admin extends React.Component {
       game: this.props.game,
       users: [],
       questions: [],
+      teams: [],
     };
   }
 
   componentDidMount() {
     this.snapshotGame();
     this.snapshotGameUsers();
-    this.snapshotGameQuestion();
+    this.snapshotGameQuestions();
+    this.snapshotGameTeams();
   }
 
   snapshotGame() {
@@ -42,11 +44,9 @@ class Admin extends React.Component {
         snapshot.docChanges().forEach((change) => {
           const user = change.doc;
           if (change.type === "added") {
-            console.log("New user: ", change.doc.data());
             this.setState({ users: [...this.state.users, user] });
           }
           if (change.type === "modified") {
-            console.log("Modified user: ", change.doc.data());
             let users = this.state.users;
             const index = this.state.users.findIndex(
               (element) => element.id === user.id
@@ -55,13 +55,12 @@ class Admin extends React.Component {
             this.setState({ users });
           }
           if (change.type === "removed") {
-            console.log("Removed user: ", change.doc.data());
           }
         });
       });
   }
 
-  snapshotGameQuestion() {
+  snapshotGameQuestions() {
     firebase
       .firestore()
       .collection("games")
@@ -72,11 +71,9 @@ class Admin extends React.Component {
         snapshot.docChanges().forEach((change) => {
           const question = change.doc;
           if (change.type === "added") {
-            console.log("New question: ", change.doc.data());
             this.setState({ questions: [question, ...this.state.questions] });
           }
           if (change.type === "modified") {
-            console.log("Modified question: ", change.doc.data());
             let questions = this.state.questions;
             const index = this.state.questions.findIndex(
               (element) => element.id === question.id
@@ -85,7 +82,33 @@ class Admin extends React.Component {
             this.setState({ questions });
           }
           if (change.type === "removed") {
-            console.log("Removed question: ", change.doc.data());
+          }
+        });
+      });
+  }
+
+  snapshotGameTeams() {
+    firebase
+      .firestore()
+      .collection("games")
+      .doc(this.state.game.id)
+      .collection("teams")
+      .orderBy("createdAt")
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          const team = change.doc;
+          if (change.type === "added") {
+            this.setState({ teams: [team, ...this.state.teams] });
+          }
+          if (change.type === "modified") {
+            let teams = this.state.teams;
+            const index = this.state.teams.findIndex(
+              (element) => element.id === team.id
+            );
+            teams[index] = team;
+            this.setState({ teams });
+          }
+          if (change.type === "removed") {
           }
         });
       });
@@ -161,7 +184,7 @@ class Admin extends React.Component {
         <h2>ID de la partie : {this.state.game.id}</h2>
         <p>Indiquer cet ID aux participants.</p>
 
-        <Users users={this.state.users} />
+        <Users users={this.state.users} teams={this.state.teams} />
 
         <button onClick={() => this.nextQuestion()}>Question suivante</button>
         <button onClick={() => this.resetBuzzers()}>Reset Buzzers</button>

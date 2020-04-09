@@ -9,13 +9,17 @@ class User extends React.Component {
     this.state = {
       user: this.props.user,
       game: this.props.game,
+      teams: [],
       buzzed: false,
     };
+
+    this.joinTeam = this.joinTeam.bind(this);
   }
 
   componentDidMount() {
     this.snapshotGame();
     this.snapshotGameUsers();
+    this.snapshotGameTeams();
   }
 
   snapshotGame() {
@@ -39,6 +43,32 @@ class User extends React.Component {
         this.setState({ user });
         if (!user.data().buzzed) this.setState({ buzzed: false });
         else this.setState({ buzzed: true });
+      });
+  }
+
+  snapshotGameTeams() {
+    firebase
+      .firestore()
+      .collection("games")
+      .doc(this.state.game.id)
+      .collection("teams")
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          const team = change.doc;
+          if (change.type === "added") {
+            this.setState({ teams: [...this.state.teams, team] });
+          }
+          if (change.type === "modified") {
+            let teams = this.state.teams;
+            const index = this.state.teams.findIndex(
+              (element) => element.id === team.id
+            );
+            teams[index] = team;
+            this.setState({ teams });
+          }
+          if (change.type === "removed") {
+          }
+        });
       });
   }
 
@@ -68,12 +98,22 @@ class User extends React.Component {
       });
   }
 
+  joinTeam(team) {
+    firebase
+      .firestore()
+      .collection("games")
+      .doc(this.state.game.id)
+      .collection("users")
+      .doc(this.state.user.id)
+      .update({ team: team.data() });
+  }
+
   render() {
     return (
       <div>
         <h2>{this.state.user.data().name}</h2>
         <Buzzer press={() => this.pressBuzzer()} buzzed={this.state.buzzed} />
-        <Teams teams={this.state.game.data().teams} />
+        <Teams teams={this.state.teams} user={this.state.user} joinTeam={this.joinTeam} />
       </div>
     );
   }

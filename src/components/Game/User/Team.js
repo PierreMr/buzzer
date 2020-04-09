@@ -1,5 +1,14 @@
 import React from "react";
 
-const Team = ({ team }) => <li key={team.name}>{team.name}</li>;
+const Team = ({ team, user, joinTeam }) => (
+  <li key={team.data().name} onClick={() => joinTeam(team)}>
+    {team.data().name}
+    {user.data().team
+      ? user.data().team.name === team.data().name
+        ? " - Yep"
+        : ""
+      : ""}
+  </li>
+);
 
 export default Team;
