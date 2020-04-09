@@ -80,7 +80,11 @@ const NewGame = () => {
     });
   }
 
-  return <button onClick={() => createGame()}>Créer une partie</button>;
+  return (
+    <button onClick={() => createGame()} className={"btn btn-primary"}>
+      Créer une partie
+    </button>
+  );
 };
 
 export default NewGame;
