@@ -128,7 +128,7 @@ class Admin extends React.Component {
             .update({
                 buzz: firebase.firestore.FieldValue.arrayUnion({
                     id: `delimiter_${[...Array(10)].map(() => Math.random().toString(36)[2]).join('')}`,
-                    name: "",
+                    name: "delimiter",
                     createdAt: new Date(),
                 }),
             })
@@ -153,7 +153,7 @@ class Admin extends React.Component {
                         return (
                             <div key={question.id}>
                                 <h4>Question {question.id}</h4>
-                                <ul className={"list-group list-group-flush"}>
+                                <ul className={"list-group list-group-flush mb-5"}>
                                     {
                                         question.data().buzz.map((buzz) => {
                                             if(buzz.name === "delimiter") {
