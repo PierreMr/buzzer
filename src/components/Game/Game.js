@@ -64,7 +64,6 @@ function renderLoading() {
 function renderAdmin(game, user) {
   return (
     <div>
-      <h1>Game</h1>
       <Admin game={game} user={user} />
     </div>
   );
@@ -73,7 +72,6 @@ function renderAdmin(game, user) {
 function renderUser(game, user) {
   return (
     <div>
-      <h1>Game</h1>
       <User game={game} user={user} />
     </div>
   );
