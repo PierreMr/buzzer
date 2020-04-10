@@ -33,6 +33,7 @@ const JoinGame = () => {
 
   return (
     <form
+      className="mt-5 pt-5"
       onSubmit={(e) => {
         e.preventDefault();
         if (!inputGameId.value.trim() || !inputUserName.value.trim()) {
@@ -45,15 +46,23 @@ const JoinGame = () => {
         });
       }}
     >
-      <label>
-        ID Game :
-        <input type="text" ref={(node) => (inputGameId = node)} />
-      </label>
-      <label>
-        Nom :
-        <input type="text" ref={(node) => (inputUserName = node)} />
-      </label>
-      <input type="submit" value="Rejoindre" />
+      <div className="form-group row">
+        <input
+          type="text"
+          className="form-control col-6 m-auto"
+          ref={(node) => (inputGameId = node)}
+          placeholder="ID Game"
+        />
+      </div>
+      <div className="form-group row">
+        <input
+          type="text"
+          className="form-control col-6 m-auto"
+          ref={(node) => (inputUserName = node)}
+          placeholder="Nom"
+        />
+      </div>
+      <input type="submit" className="btn btn-primary" value="Rejoindre" />
     </form>
   );
 };

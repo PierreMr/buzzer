@@ -54,8 +54,7 @@ const Game = () => {
 
 function renderLoading() {
   return (
-    <div>
-      <h1>Game</h1>
+    <div className="text-center m-5">
       <h2>Loading...</h2>
     </div>
   );
@@ -63,7 +62,7 @@ function renderLoading() {
 
 function renderAdmin(game, user) {
   return (
-    <div>
+    <div className="text-center m-5">
       <Admin game={game} user={user} />
     </div>
   );
@@ -71,7 +70,7 @@ function renderAdmin(game, user) {
 
 function renderUser(game, user) {
   return (
-    <div>
+    <div className="text-center m-5">
       <User game={game} user={user} />
     </div>
   );
