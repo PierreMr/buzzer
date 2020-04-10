@@ -84,6 +84,7 @@ class User extends React.Component {
         buzz: firebase.firestore.FieldValue.arrayUnion({
           idUser: this.state.user.id,
           name: this.state.user.data().name,
+          dataUser: this.state.user.data(),
           createdAt: new Date(),
         }),
       })
@@ -113,7 +114,11 @@ class User extends React.Component {
       <div>
         <h2>{this.state.user.data().name}</h2>
         <Buzzer press={() => this.pressBuzzer()} buzzed={this.state.buzzed} />
-        <Teams teams={this.state.teams} user={this.state.user} joinTeam={this.joinTeam} />
+        <Teams
+          teams={this.state.teams}
+          user={this.state.user}
+          joinTeam={this.joinTeam}
+        />
       </div>
     );
   }

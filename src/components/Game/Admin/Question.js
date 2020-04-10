@@ -9,9 +9,21 @@ const Question = ({ question }) => (
         if (buzz.name === "delimiter") {
           return <hr key={iBuzz} />;
         } else {
+          let liClassName = "";
+          if (buzz.dataUser.team) {
+            if (buzz.dataUser.team.name === "Ketchup") {
+              liClassName += " list-group-item-danger";
+            } else if (buzz.dataUser.team.name === "Mayo") {
+              liClassName += " list-group-item-warning";
+            }
+          }
+
           return (
-            <li key={iBuzz} className={"list-group-item col-6 m-auto"}>
-              {buzz.name}
+            <li
+              key={iBuzz}
+              className={"list-group-item" + liClassName + " col-6 m-auto"}
+            >
+              {buzz.dataUser.name}
               <span className="float-right">
                 {iBuzz !== 0
                   ? moment(buzz.createdAt.toDate()).diff(
