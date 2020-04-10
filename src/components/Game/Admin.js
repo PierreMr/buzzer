@@ -181,13 +181,22 @@ class Admin extends React.Component {
     return (
       <div>
         <h2>{this.state.user.data().name}</h2>
-        <h2>ID de la partie : {this.state.game.id}</h2>
-        <p>Indiquer cet ID aux participants.</p>
+        <div className="text-right">
+          <p>Inviter des participants</p>
+          <h6>{this.state.game.id}</h6>
+        </div>
 
         <Users users={this.state.users} teams={this.state.teams} />
 
-        <button onClick={() => this.nextQuestion()}>Question suivante</button>
-        <button onClick={() => this.resetBuzzers()}>Reset Buzzers</button>
+        <button className="btn btn-primary" onClick={() => this.nextQuestion()}>
+          Question suivante
+        </button>
+        <button
+          className="btn btn-primary ml-1"
+          onClick={() => this.resetBuzzers()}
+        >
+          Reset Buzzers
+        </button>
 
         <Questions questions={this.state.questions} />
       </div>
