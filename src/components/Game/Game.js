@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import * as firebase from "firebase";
 import Admin from "./Admin";
 import User from "./User";
+import loadingStyle from "./Game.css";
 
 const Game = () => {
   let { gameId, userId } = useParams();
   const [loaded, setLoaded] = useState(false);
   const [user, setUser] = useState(null);
   const [game, setGame] = useState(null);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -35,19 +37,30 @@ const Game = () => {
                 console.log("User ID n'existe pas.");
               }
             });
+
+          game.ref
+            .collection("questions")
+            .orderBy("createdAt", "desc")
+            .limit(1)
+            .get()
+            .then((question) => {
+              if (!question.empty) {
+                setCurrentQuestion(question.docs[0]);
+              }
+            });
         } else {
           console.log("Game ID n'existe pas.");
         }
       });
   }
 
-  if (!loaded && !user) {
+  if (!loaded || !user || !currentQuestion) {
     return renderLoading();
   } else {
     if (user.data().admin) {
       return renderAdmin(game, user);
     } else {
-      return renderUser(game, user);
+      return renderUser(game, user, currentQuestion);
     }
   }
 };
@@ -55,7 +68,11 @@ const Game = () => {
 function renderLoading() {
   return (
     <div className="text-center m-5">
-      <h2>Loading...</h2>
+      <div className="loadingio-spinner-ball-ufhu0o4vrnd">
+        <div className="ldio-vlx5gq8g56r">
+          <div></div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -68,10 +85,10 @@ function renderAdmin(game, user) {
   );
 }
 
-function renderUser(game, user) {
+function renderUser(game, user, currentQuestion) {
   return (
     <div className="text-center m-5">
-      <User game={game} user={user} />
+      <User game={game} user={user} currentQuestion={currentQuestion} />
     </div>
   );
 }
