@@ -1,9 +1,9 @@
 import React from "react";
 import moment from "moment";
 
-const Question = ({ question }) => (
+const Question = ({ question, iQuestion }) => (
   <div key={question.id} className="mt-3">
-    <h4>Question</h4>
+    <h4>Question {iQuestion === 0 ? " en cours" : ""} </h4>
     <ul className={"list-group list-group-flush mb-5 row"}>
       {question.data().buzz.map((buzz, iBuzz) => {
         if (buzz.name === "delimiter") {
@@ -28,8 +28,10 @@ const Question = ({ question }) => (
                 {iBuzz !== 0
                   ? moment(buzz.createdAt.toDate()).diff(
                       question.data().buzz[0].createdAt.toDate(),
-                      "seconds"
-                    ) + "s"
+                      "milliseconds"
+                    ) /
+                      1000 +
+                    "s"
                   : ""}
               </span>
             </li>

@@ -2,6 +2,7 @@ import React from "react";
 import * as firebase from "firebase";
 import Buzzer from "./User/Buzzer";
 import Teams from "./User/Teams";
+import Question from "./Admin/Question";
 
 class User extends React.Component {
   constructor(props) {
@@ -11,6 +12,7 @@ class User extends React.Component {
       game: this.props.game,
       teams: [],
       buzzed: false,
+      currentQuestion: this.props.currentQuestion,
     };
 
     this.joinTeam = this.joinTeam.bind(this);
@@ -20,6 +22,7 @@ class User extends React.Component {
     this.snapshotGame();
     this.snapshotGameUsers();
     this.snapshotGameTeams();
+    this.snapshotGameQuestions();
   }
 
   snapshotGame() {
@@ -72,6 +75,31 @@ class User extends React.Component {
       });
   }
 
+  snapshotGameQuestions() {
+    firebase
+      .firestore()
+      .collection("games")
+      .doc(this.state.game.id)
+      .collection("questions")
+      .orderBy("createdAt", "desc")
+      .limit(1)
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          const question = change.doc;
+          if (change.type === "added") {
+            this.setState({ currentQuestion: question });
+            console.log(this.state.currentQuestion);
+          }
+          if (change.type === "modified") {
+            this.setState({ currentQuestion: question });
+            console.log(this.state.currentQuestion);
+          }
+          if (change.type === "removed") {
+          }
+        });
+      });
+  }
+
   pressBuzzer() {
     this.setState({ buzzed: true });
     firebase
@@ -96,6 +124,18 @@ class User extends React.Component {
           .collection("users")
           .doc(this.state.user.id)
           .update({ buzzed: true });
+
+        firebase
+          .firestore()
+          .collection("games")
+          .doc(this.state.game.id)
+          .collection("users")
+          .get()
+          .then((users) => {
+            users.forEach((user) => {
+              user.ref.update({ buzzed: true });
+            });
+          });
       });
   }
 
@@ -119,6 +159,7 @@ class User extends React.Component {
           user={this.state.user}
           joinTeam={this.joinTeam}
         />
+        <Question question={this.state.currentQuestion} iQuestion={0} />
       </div>
     );
   }
