@@ -8,7 +8,9 @@ const logo = {
 
 const Header = () => (
     <>
-        <img src={process.env.PUBLIC_URL + '/logobq.png'} alt="Logo Burger Quizz" style={logo} />
+        <a href="/">
+            <img src={process.env.PUBLIC_URL + '/logobq.png'} alt="Logo Burger Quizz" style={logo} />
+        </a>
     </>
 );
 

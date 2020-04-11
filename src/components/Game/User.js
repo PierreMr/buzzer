@@ -101,6 +101,8 @@ class User extends React.Component {
   }
 
   pressBuzzer() {
+    const audio = new Audio(`${process.env.PUBLIC_URL}/aie.mp3`);
+    audio.play();
     this.setState({ buzzed: true });
     firebase
       .firestore()
