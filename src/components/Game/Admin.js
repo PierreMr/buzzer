@@ -74,6 +74,10 @@ class Admin extends React.Component {
             this.setState({ questions: [question, ...this.state.questions] });
           }
           if (change.type === "modified") {
+            if (question.data().buzz && question.data().buzz.length === 1) {
+              const audio = new Audio(`${process.env.PUBLIC_URL}/aie.mp3`);
+              audio.play();
+            }
             let questions = this.state.questions;
             const index = this.state.questions.findIndex(
               (element) => element.id === question.id

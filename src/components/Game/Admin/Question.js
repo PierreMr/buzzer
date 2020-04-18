@@ -24,7 +24,7 @@ const Question = ({ question, iQuestion }) => (
               className={"list-group-item" + liClassName + " col-6 m-auto"}
             >
               {buzz.dataUser.name}
-              <span className="float-right">
+              {/* <span className="float-right">
                 {iBuzz !== 0
                   ? moment(buzz.createdAt.toDate()).diff(
                       question.data().buzz[0].createdAt.toDate(),
@@ -33,7 +33,7 @@ const Question = ({ question, iQuestion }) => (
                       1000 +
                     "s"
                   : ""}
-              </span>
+              </span> */}
             </li>
           );
         }
