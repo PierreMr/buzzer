@@ -12,7 +12,10 @@ class Admin extends React.Component {
       users: [],
       questions: [],
       teams: [],
+      ptsByQuestion: 1,
     };
+    this.updateScore = this.updateScore.bind(this);
+    this.changeStatusUser = this.changeStatusUser.bind(this);
   }
 
   componentDidMount() {
@@ -181,6 +184,48 @@ class Admin extends React.Component {
       });
   }
 
+  changePtsByQuestion(e) {
+    this.setState({ ptsByQuestion: Number(e.target.value) });
+  }
+
+  updateScore(idTeam, op) {
+    if (op === "+") {
+      firebase
+        .firestore()
+        .collection("games")
+        .doc(this.state.game.id)
+        .collection("teams")
+        .doc(idTeam)
+        .update({
+          score: firebase.firestore.FieldValue.increment(
+            this.state.ptsByQuestion
+          ),
+        });
+    } else if (op === "-") {
+      firebase
+        .firestore()
+        .collection("games")
+        .doc(this.state.game.id)
+        .collection("teams")
+        .doc(idTeam)
+        .update({
+          score: firebase.firestore.FieldValue.increment(
+            this.state.ptsByQuestion * -1
+          ),
+        });
+    }
+  }
+
+  changeStatusUser(idUser, disabled) {
+    firebase
+      .firestore()
+      .collection("games")
+      .doc(this.state.game.id)
+      .collection("users")
+      .doc(idUser)
+      .update({ disabled });
+  }
+
   render() {
     return (
       <div>
@@ -190,17 +235,38 @@ class Admin extends React.Component {
           <h6>{this.state.game.id}</h6>
         </div>
 
-        <Users users={this.state.users} teams={this.state.teams} />
+        <div className="col-12 row mb-3">
+          <div className="form-group col-12">
+            <label>Points par question</label>
+            <input
+              className="form-control col-1 m-auto"
+              type="number"
+              min="1"
+              value={this.state.ptsByQuestion}
+              onChange={(e) => this.changePtsByQuestion(e)}
+            ></input>
+            <small id="emailHelp" className="form-text text-muted">
+              Points ajoutés ou enlevés à une équipe ci-dessous
+            </small>
+          </div>
+        </div>
+        <Users
+          users={this.state.users}
+          teams={this.state.teams}
+          ptsByQuestion={this.state.ptsByQuestion}
+          updateScore={this.updateScore}
+          changeStatusUser={this.changeStatusUser}
+        />
 
         <button className="btn btn-primary" onClick={() => this.nextQuestion()}>
           Question suivante
         </button>
-        <button
+        {/* <button
           className="btn btn-primary ml-1"
           onClick={() => this.resetBuzzers()}
         >
           Reset Buzzers
-        </button>
+        </button> */}
 
         <Questions questions={this.state.questions} />
       </div>

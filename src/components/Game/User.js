@@ -3,6 +3,7 @@ import * as firebase from "firebase";
 import Buzzer from "./User/Buzzer";
 import Teams from "./User/Teams";
 import Question from "./Admin/Question";
+import Users from "./User/Users";
 
 class User extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class User extends React.Component {
     this.state = {
       user: this.props.user,
       game: this.props.game,
+      users: [],
       teams: [],
       buzzed: false,
       currentQuestion: this.props.currentQuestion,
@@ -20,6 +22,7 @@ class User extends React.Component {
 
   componentDidMount() {
     this.snapshotGame();
+    this.snapshotGameUser();
     this.snapshotGameUsers();
     this.snapshotGameTeams();
     this.snapshotGameQuestions();
@@ -35,7 +38,7 @@ class User extends React.Component {
       });
   }
 
-  snapshotGameUsers() {
+  snapshotGameUser() {
     firebase
       .firestore()
       .collection("games")
@@ -46,6 +49,34 @@ class User extends React.Component {
         this.setState({ user });
         if (!user.data().buzzed) this.setState({ buzzed: false });
         else this.setState({ buzzed: true });
+      });
+  }
+
+  snapshotGameUsers() {
+    firebase
+      .firestore()
+      .collection("games")
+      .doc(this.state.game.id)
+      .collection("users")
+      .where("role", "==", "user")
+      .orderBy("createdAt")
+      .onSnapshot((snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          const user = change.doc;
+          if (change.type === "added") {
+            this.setState({ users: [...this.state.users, user] });
+          }
+          if (change.type === "modified") {
+            let users = this.state.users;
+            const index = this.state.users.findIndex(
+              (element) => element.id === user.id
+            );
+            users[index] = user;
+            this.setState({ users });
+          }
+          if (change.type === "removed") {
+          }
+        });
       });
   }
 
@@ -88,11 +119,9 @@ class User extends React.Component {
           const question = change.doc;
           if (change.type === "added") {
             this.setState({ currentQuestion: question });
-            console.log(this.state.currentQuestion);
           }
           if (change.type === "modified") {
             this.setState({ currentQuestion: question });
-            console.log(this.state.currentQuestion);
           }
           if (change.type === "removed") {
           }
@@ -148,10 +177,22 @@ class User extends React.Component {
       .doc(this.state.game.id)
       .collection("users")
       .doc(this.state.user.id)
-      .update({ team: team.data() });
+      .update({ team: team.data(), idTeam: team.id });
   }
 
   render() {
+    if (this.state.user.data().disabled) {
+      return (
+        <div>
+          <h2>{this.state.user.data().name}</h2>
+          <h3 className="m-5 text-danger">
+            Le Grand Miam ne vous autorise pas à jouer.
+          </h3>
+          <h3 className="m-5 text-danger">Ciao.</h3>
+        </div>
+      );
+    }
+
     return (
       <div>
         <h2>{this.state.user.data().name}</h2>
@@ -162,6 +203,11 @@ class User extends React.Component {
           joinTeam={this.joinTeam}
         />
         <Question question={this.state.currentQuestion} iQuestion={0} />
+        <Users
+          users={this.state.users}
+          teams={this.state.teams}
+          user={this.state.user}
+        />
       </div>
     );
   }

@@ -64,6 +64,7 @@ const NewGame = () => {
         .add({
           name: team.name,
           color: team.color,
+          score: 0,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         })
         .then((newTeam) => {
