@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserCheck } from "@fortawesome/free-solid-svg-icons";
 
 const Users = ({ users, teams, user }) => {
   return (
@@ -8,7 +10,13 @@ const Users = ({ users, teams, user }) => {
           <li className="list-group-item list-group-item-secondary">
             {`${team.data().name} `}
             <b>{team.data().score}</b>
-            {user.data().idTeam === team.id ? " (Ton équipe)" : ""}
+            <span className="float-right">
+              {user.data().idTeam === team.id ? (
+                <FontAwesomeIcon icon={faUserCheck} />
+              ) : (
+                ""
+              )}
+            </span>
           </li>
           {users
             .filter((user) => user.data().team)
