@@ -4,6 +4,9 @@ import Buzzer from "./User/Buzzer";
 import Teams from "./User/Teams";
 import Question from "./Admin/Question";
 import Users from "./User/Users";
+import { SketchPicker } from "react-color";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPalette } from "@fortawesome/free-solid-svg-icons";
 
 class User extends React.Component {
   constructor(props) {
@@ -15,6 +18,8 @@ class User extends React.Component {
       teams: [],
       buzzed: false,
       currentQuestion: this.props.currentQuestion,
+      buzzerColor: "#f62035",
+      showColorPicker: false,
     };
 
     this.joinTeam = this.joinTeam.bind(this);
@@ -180,6 +185,14 @@ class User extends React.Component {
       .update({ team: team.data(), idTeam: team.id });
   }
 
+  changeBuzzerColor = (color) => {
+    this.setState({ buzzerColor: color.hex });
+  };
+
+  toggleColorPicker = () => {
+    this.setState({ showColorPicker: !this.state.showColorPicker });
+  };
+
   render() {
     if (this.state.user.data().disabled) {
       return (
@@ -196,7 +209,34 @@ class User extends React.Component {
     return (
       <div>
         <h2>{this.state.user.data().name}</h2>
-        <Buzzer press={() => this.pressBuzzer()} buzzed={this.state.buzzed} />
+        <div className="row">
+          <div className="col-6 m-auto">
+            <Buzzer
+              press={() => this.pressBuzzer()}
+              buzzed={this.state.buzzed}
+              buzzerColor={this.state.buzzerColor}
+            />
+            <button
+              className={`btn btn-sm ${
+                this.state.showColorPicker
+                  ? "btn-outline-primary"
+                  : "btn-primary"
+              } mt-3`}
+              onClick={() => this.toggleColorPicker()}
+              style={{ marginLeft: "11rem" }}
+            >
+              <FontAwesomeIcon icon={faPalette} />
+            </button>
+            {this.state.showColorPicker ? (
+              <div className="d-flex justify-content-center mt-3">
+                <SketchPicker
+                  color={this.state.buzzerColor}
+                  onChangeComplete={this.changeBuzzerColor}
+                />
+              </div>
+            ) : null}
+          </div>
+        </div>
         <Teams
           teams={this.state.teams}
           user={this.state.user}
