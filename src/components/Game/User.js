@@ -7,6 +7,7 @@ import Users from "./User/Users";
 import { SketchPicker } from "react-color";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette } from "@fortawesome/free-solid-svg-icons";
+import { ColorLuminance } from "../../utils";
 
 class User extends React.Component {
   constructor(props) {
@@ -18,7 +19,8 @@ class User extends React.Component {
       teams: [],
       buzzed: false,
       currentQuestion: this.props.currentQuestion,
-      buzzerColor: "#f62035",
+      buzzerColor: "#ec2138",
+      buzzerShadowColor: ColorLuminance("#ec2138", -0.2),
       showColorPicker: false,
     };
 
@@ -187,6 +189,7 @@ class User extends React.Component {
 
   changeBuzzerColor = (color) => {
     this.setState({ buzzerColor: color.hex });
+    this.setState({ buzzerShadowColor: ColorLuminance(color.hex, -0.2) });
   };
 
   toggleColorPicker = () => {
@@ -215,6 +218,7 @@ class User extends React.Component {
               press={() => this.pressBuzzer()}
               buzzed={this.state.buzzed}
               buzzerColor={this.state.buzzerColor}
+              buzzerShadowColor={this.state.buzzerShadowColor}
             />
             <button
               className={`btn btn-sm ${

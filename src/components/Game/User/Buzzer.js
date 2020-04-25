@@ -1,6 +1,6 @@
 import React from "react";
 
-const Buzzer = ({ press, buzzed, buzzerColor }) => {
+const Buzzer = ({ press, buzzed, buzzerColor, buzzerShadowColor }) => {
   const buzzer = {
     width: "200px",
     height: "200px",
@@ -8,7 +8,7 @@ const Buzzer = ({ press, buzzed, buzzerColor }) => {
     border: "none",
     background: `${buzzerColor}`,
     color: "white",
-    boxShadow: "0px 0px 22px 11px grey",
+    boxShadow: `0px 0px 22px 11px ${buzzerShadowColor}`,
     margin: "auto",
     marginTop: "1rem",
   };
